@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31025.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scradot.Test", "Scradot.Test\Scradot.Test.csproj", "{A03AB256-D040-4976-9BDA-8293FFE9E421}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scradot.Core", "Scradot.Core\Scradot.Core.csproj", "{0D38F801-B151-40F7-AF1E-93CFF5E7300A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A03AB256-D040-4976-9BDA-8293FFE9E421}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A03AB256-D040-4976-9BDA-8293FFE9E421}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A03AB256-D040-4976-9BDA-8293FFE9E421}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A03AB256-D040-4976-9BDA-8293FFE9E421}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D38F801-B151-40F7-AF1E-93CFF5E7300A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D38F801-B151-40F7-AF1E-93CFF5E7300A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D38F801-B151-40F7-AF1E-93CFF5E7300A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D38F801-B151-40F7-AF1E-93CFF5E7300A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CB0D8EEE-5B6A-41AB-8F66-F6F01A67BE58}
+	EndGlobalSection
+EndGlobal
