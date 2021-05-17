@@ -14,7 +14,7 @@ namespace Scradot.Core.Abstract
         public abstract void SendRequest(Request request);
         public abstract void ErrorRequest(Request request, HttpResponseMessage httpResponseMessage);
         public abstract void ReceivedResponse(Request request, Response response);
-        public abstract void SendItem(Response response, AbstractItem item);
+        public abstract void SendItem(Response response, object item);
         public abstract void CloseSpider();
     }
 }

@@ -25,7 +25,7 @@ namespace Scradot.Core.Midleware
         public void SendRequest(Request request) => RequestsLastMinute++;
         public void ErrorRequest(Request request, HttpResponseMessage httpResponseMessage) => NumberOfErrorRequests++;
         public void ReceivedResponse(Request request, Response response) => ResponsesLastMinute++;
-        public void SendItem(Response response, AbstractItem item) => ItemsLastMinute++;
+        public void SendItem(Response response, object item) => ItemsLastMinute++;
 
         public void CloseSpider()
         {

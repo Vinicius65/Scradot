@@ -69,7 +69,7 @@ namespace Scradot.Core
                     if (generator is Request)
                         taskList.Add(HandleRequests(generator as Request, depth + 1));
                     else
-                        Midlewares.ExecuteSendItem(response, generator as AbstractItem);
+                        Midlewares.ExecuteSendItem(response, generator);
                 }
                 Task.WaitAll(taskList.ToArray());
             }

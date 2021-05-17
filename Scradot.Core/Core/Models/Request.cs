@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Scradot.Core.Models
 {
-    public class Request : Generator
+    public class Request
     {
-        public Request(string url, Func<Response, IEnumerable<Generator>> callback, HttpMethod method = null, DictHeaders headers = null, HttpContent content = null, DictArgs args = null)
+        public Request(string url, Func<Response, IEnumerable<object>> callback, HttpMethod method = null, DictHeaders headers = null, HttpContent content = null, DictArgs args = null)
         {
             Url = url;
             Callback = callback;
@@ -21,7 +21,7 @@ namespace Scradot.Core.Models
         }
 
         public string Url { get; private set; }
-        public Func<Response, IEnumerable<Generator>> Callback { get; set; }
+        public Func<Response, IEnumerable<object>> Callback { get; set; }
         public HttpMethod Method { get; private set; }
         public DictHeaders Headers { get; private set; }
         public HttpContent Content { get; private set; }

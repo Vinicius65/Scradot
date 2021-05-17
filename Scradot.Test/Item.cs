@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Test
 {
-    public class Item : Generator
+    public class Item
     {
         public string Url { get; set; }
         public string Autor { get; set; }

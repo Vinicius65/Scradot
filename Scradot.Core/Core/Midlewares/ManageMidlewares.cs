@@ -20,7 +20,7 @@ namespace Scradot.Core.Midleware
         public void ExecuteSendRequest(Request request) => Midlewares.ForEach(midleware => Execute(() => midleware.SendRequest(request)));
         public void ExecuteErrorRequest(Request request, HttpResponseMessage httpResponseMessage) => Midlewares.ForEach(midleware => Execute(() => midleware.ErrorRequest(request, httpResponseMessage)));
         public void ExecuteReceivedResponse(Request request, Response response) => Midlewares.ForEach(midleware => Execute(() => midleware.ReceivedResponse(request, response)));
-        public void ExecuteSendItem(Response response, AbstractItem item) => Midlewares.ForEach(midleware => Execute(() => midleware.SendItem(response, item)));
+        public void ExecuteSendItem(Response response, object item) => Midlewares.ForEach(midleware => Execute(() => midleware.SendItem(response, item)));
         public void ExecuteCloseSpider() => Midlewares.ForEach(midleware => Execute(() => midleware.CloseSpider()));
 
         private void Execute(Action action)

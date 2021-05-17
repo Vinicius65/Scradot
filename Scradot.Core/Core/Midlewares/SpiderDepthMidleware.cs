@@ -52,7 +52,7 @@ namespace Scradot.Core.Midleware
                 DepthRequests.Add(response.Meta.Depth, 1);
         }
 
-        public void SendItem(Response response, AbstractItem item){ }
+        public void SendItem(Response response, object item){ }
 
         public void CloseSpider()
         {

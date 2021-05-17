@@ -17,7 +17,7 @@ namespace Test
             yield return new Request(url: "http://quotes.toscrape.com", callback: Parse);
         }
 
-        public override  IEnumerable<Generator> Parse(Response response)
+        public override  IEnumerable<object> Parse(Response response)
         {
             Console.WriteLine(response.Url);
 
@@ -38,7 +38,7 @@ namespace Test
             }
         }
 
-        public IEnumerable<Generator> ParseEnterPage(Response response)
+        public IEnumerable<object> ParseEnterPage(Response response)
         {
             foreach (var div in response.Xpath("//div[@class='quote']"))
             {
@@ -48,7 +48,7 @@ namespace Test
             }
         }
 
-        public IEnumerable<Generator> ParseItem(Response response)
+        public IEnumerable<object> ParseItem(Response response)
         {
             yield return new Item
             {

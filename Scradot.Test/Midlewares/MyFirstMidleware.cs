@@ -2,6 +2,7 @@
 using Scradot.Core.Models;
 using System;
 using System.Net.Http;
+using Test;
 
 namespace Scradot.Test.Midlewares
 {
@@ -22,9 +23,9 @@ namespace Scradot.Test.Midlewares
             throw new NotImplementedException();
         }
 
-        public void SendItem(Response response, AbstractItem item)
+        public void SendItem(Response response, object item)
         {
-            throw new NotImplementedException();
+            var myItem = item as Item;
         }
 
         public void SendRequest(Request request)

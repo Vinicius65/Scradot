@@ -20,7 +20,7 @@ namespace Scradot.Core.Abstract
         }
 
         public abstract IEnumerable<Request> BeginRequests();
-        public abstract IEnumerable<Generator> Parse(Response response);
+        public abstract IEnumerable<object> Parse(Response response);
 
     }
 }
