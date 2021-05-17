@@ -1,4 +1,6 @@
 ﻿using Scradot.Core;
+using Scradot.Core.Abstract;
+using Scradot.Core.Midleware;
 using Scradot.Test.Midlewares;
 using System;
 using System.Collections.Generic;
@@ -10,10 +12,10 @@ namespace Test
     {
         public static async Task Main()
         {
-            var manager = new ManageRequests<Item>(
+            var manager = new ManageSpider(
                 new QuotesSpider(),
                 new ManageMidlewares(
-                    new List<AbstractMidleware>{
+                    new List<IMidleware>{
                         new MyFirstMidleware() 
                     }
                 )

@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scradot.Core.Interfaces
+namespace Scradot.Core.Abstract
 {
-    public interface ISpiderLogging
+    public abstract class Generator
     {
-        void StartLog();
     }
 }

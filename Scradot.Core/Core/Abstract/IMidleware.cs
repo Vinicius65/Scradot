@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Scradot.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scradot.Core
+namespace Scradot.Core.Abstract
 {
-    public abstract class AbstractMidleware
+    public interface IMidleware
     {
         public abstract void StartSpider();
         public abstract void SendRequest(Request request);

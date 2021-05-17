@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scradot.Core
+namespace Scradot.Core.Models
 {
     public class DictHeaders : Dictionary<string, string> { }
     public class DictArgs : Dictionary<string, object> { }

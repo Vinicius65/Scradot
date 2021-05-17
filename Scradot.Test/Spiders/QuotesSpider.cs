@@ -1,13 +1,14 @@
 ﻿using Scradot.Core;
+using Scradot.Core.Abstract;
+using Scradot.Core.Models;
 using Scradot.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Test.Base;
 
 namespace Test
 {
-    public class QuotesSpider : BaseSpider
+    public class QuotesSpider : AbstractSpider
     {
         public QuotesSpider() : base(new SpiderConfig(TimeSpan.FromSeconds(1), 4, 3)) {}
 

@@ -1,5 +1,7 @@
-﻿using Scradot.Core.Exceptions;
-using Scradot.Core.Interfaces;
+﻿using Scradot.Core.Abstract;
+using Scradot.Core.Exceptions;
+using Scradot.Core.Midleware;
+using Scradot.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,22 +12,18 @@ using System.Threading.Tasks;
 
 namespace Scradot.Core
 {
-    public class ManageRequests<T> where T : AbstractItem
+    public class ManageSpider
     {
-        public AbstractSpider<T> SpiderAbstract { get; private set; }
-        private readonly SpiderStatistic spiderStatistic;
-        private readonly SpiderDepthLog spiderDepthLog;
+        public AbstractSpider SpiderAbstract { get; private set; }
         public SemaphoreSlim ConcurrencyRequests { get; private set; }
         public TimeSpan DownloadDelay { get; private set; }
         public int CountRetryRequests { get; private set; }
         public ManageMidlewares Midlewares { get; private set; }
 
-        public ManageRequests(AbstractSpider<T> spiderAbstract, ManageMidlewares midlewares = null)
+        public ManageSpider(AbstractSpider spiderAbstract, ManageMidlewares midlewares = null)
         {
             Midlewares = midlewares ?? new ManageMidlewares();
             SpiderAbstract = spiderAbstract;
-            spiderStatistic = new SpiderStatistic();
-            spiderDepthLog = new SpiderDepthLog();
 
             CountRetryRequests = spiderAbstract.SpiderConfig.RetryRequests;
             ConcurrencyRequests = new SemaphoreSlim(spiderAbstract.SpiderConfig.ConcurrencyRequests);
@@ -39,7 +37,7 @@ namespace Scradot.Core
             {
                 await HandleRequests(request, 1);
             }
-            SpiderAbstract.Close();
+            Midlewares.ExecuteCloseSpider();
         }
 
         private async Task HandleRequests(Request request, int depth)
@@ -51,18 +49,12 @@ namespace Scradot.Core
             var success = true;
             try
             {
-                spiderStatistic.AddRequest();
-                spiderDepthLog.AddDepthRequest(depth);
-
                 Midlewares.ExecuteSendRequest(request);
-
-                response = await RetryRequests(request);
+                response = await RetryRequests(request, depth);
             }
             catch(RequestException exception)
             {
                 success = false;
-                spiderStatistic.AddErrorRequest();
-
                 Midlewares.ExecuteErrorRequest(request, exception.ResponseMessge);
             }
             ConcurrencyRequests.Release();
@@ -77,16 +69,13 @@ namespace Scradot.Core
                     if (generator is Request)
                         taskList.Add(HandleRequests(generator as Request, depth + 1));
                     else
-                    {
-                        Midlewares.ExecuteSendItem(response, generator as T);
-                        SpiderAbstract.HandleItem(generator as T);
-                    }
+                        Midlewares.ExecuteSendItem(response, generator as AbstractItem);
                 }
                 Task.WaitAll(taskList.ToArray());
             }
         }
 
-        public async Task<Response> RetryRequests(Request request)
+        public async Task<Response> RetryRequests(Request request, int depth)
         {
             HttpResponseMessage responseMessage = null;
             for (int index = 0; index < CountRetryRequests; index++)
@@ -95,10 +84,17 @@ namespace Scradot.Core
                 {
                     using var httpClient = new HttpClient();
                     var httpRequest = request.CreateHttpRequestMessage();
+                    var timePrev = DateTime.Now;
                     var httpResponse = await httpClient.SendAsync(httpRequest);
+                    var timeDownloadDelay = DateTime.Now - timePrev;
                     responseMessage = httpResponse;
                     httpResponse.EnsureSuccessStatusCode();
-                    return new Response(httpResponse, await httpResponse.Content.ReadAsStringAsync(), request.Args);
+                    return new Response(
+                        httpResponse: httpResponse, 
+                        content: await httpResponse.Content.ReadAsStringAsync(),
+                        meta: new Meta(depth, timeDownloadDelay, index),
+                        args: request.Args
+                   );
                 }
                 catch { }
             }

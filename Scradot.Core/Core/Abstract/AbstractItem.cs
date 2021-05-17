@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scradot.Core
+namespace Scradot.Core.Abstract
 {
     public abstract class AbstractItem : Generator
     {

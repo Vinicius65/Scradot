@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Scradot.Core
+namespace Scradot.Core.Models
 {
     public class SpiderConfig
     {

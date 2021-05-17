@@ -6,12 +6,12 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scradot.Core
+namespace Scradot.Core.Models
 {
     public class Response
     {
         private readonly HtmlDocument _selector;
-        public Response(HttpResponseMessage httpResponse, string content, DictArgs args = null)
+        public Response(HttpResponseMessage httpResponse, string content, Meta meta = null, DictArgs args = null)
         {
             Url = httpResponse.RequestMessage.RequestUri.AbsoluteUri;
             _selector = new HtmlDocument();
@@ -19,8 +19,9 @@ namespace Scradot.Core
             Content = content;
             Request = httpResponse.RequestMessage;
             Args = args ?? new DictArgs();
+            Meta = meta;
         }
-
+        public Meta Meta { get; private set; }
         public DictArgs Args { get; private set; }
         public string Url { get; private set; }
         public string Content { get; private set; }

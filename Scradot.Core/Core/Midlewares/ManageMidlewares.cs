@@ -1,26 +1,27 @@
-﻿using System;
+﻿using Scradot.Core.Abstract;
+using Scradot.Core.Models;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Scradot.Core
+namespace Scradot.Core.Midleware
 {
     public class ManageMidlewares
     {
-        public List<AbstractMidleware> Midlewares { get; private set; }
-        public ManageMidlewares(List<AbstractMidleware> midlewares = null)
+        public List<IMidleware> Midlewares { get; private set; }
+        public ManageMidlewares(List<IMidleware> midlewares = null)
         {
             Midlewares = midlewares ?? new();
+            Midlewares.Add(new SpiderStatisticMidleware());
+            Midlewares.Add(new SpiderDepthMidleware());
         }
-        
-        public void ExecuteStartSpider() => Execute(() => Midlewares.ForEach(midleware => midleware.StartSpider()));
-        public void ExecuteSendRequest(Request request) => Execute(() => Midlewares.ForEach(midleware => midleware.SendRequest(request)));
-        public void ExecuteErrorRequest(Request request, HttpResponseMessage httpResponseMessage) => Execute(() => Midlewares.ForEach(midleware => midleware.ErrorRequest(request, httpResponseMessage)));
-        public void ExecuteReceivedResponse(Request request, Response response) => Execute(() => Midlewares.ForEach(midleware => midleware.ReceivedResponse(request, response)));
-        public void ExecuteSendItem(Response response, AbstractItem item) => Execute(() => Midlewares.ForEach(midleware => midleware.SendItem(response, item)));
-        public void ExecuteCloseSpider() => Execute(() => Midlewares.ForEach(midleware => midleware.CloseSpider()));
+
+        public void ExecuteStartSpider() => Midlewares.ForEach(midleware => Execute(() => midleware.StartSpider()));
+        public void ExecuteSendRequest(Request request) => Midlewares.ForEach(midleware => Execute(() => midleware.SendRequest(request)));
+        public void ExecuteErrorRequest(Request request, HttpResponseMessage httpResponseMessage) => Midlewares.ForEach(midleware => Execute(() => midleware.ErrorRequest(request, httpResponseMessage)));
+        public void ExecuteReceivedResponse(Request request, Response response) => Midlewares.ForEach(midleware => Execute(() => midleware.ReceivedResponse(request, response)));
+        public void ExecuteSendItem(Response response, AbstractItem item) => Midlewares.ForEach(midleware => Execute(() => midleware.SendItem(response, item)));
+        public void ExecuteCloseSpider() => Midlewares.ForEach(midleware => Execute(() => midleware.CloseSpider()));
 
         private void Execute(Action action)
         {
@@ -28,7 +29,7 @@ namespace Scradot.Core
             {
                 action.Invoke();
             }
-            catch { }
+            catch {}
         }
     }
 }

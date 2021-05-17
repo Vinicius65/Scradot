@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Scradot.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scradot.Core
+namespace Scradot.Core.Abstract
 {
-    public abstract class AbstractSpider<T> where T : AbstractItem
+    public abstract class AbstractSpider
     { 
         public SpiderConfig SpiderConfig { get; private set; }
         public AbstractSpider(SpiderConfig spiderConfig = null)
@@ -20,7 +21,6 @@ namespace Scradot.Core
 
         public abstract IEnumerable<Request> BeginRequests();
         public abstract IEnumerable<Generator> Parse(Response response);
-        public abstract void HandleItem(T abstractItem);
-        public virtual void Close() { }
+
     }
 }

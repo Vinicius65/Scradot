@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Scradot.Core.Abstract;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scradot.Core
+namespace Scradot.Core.Models
 {
     public class Request : Generator
     {

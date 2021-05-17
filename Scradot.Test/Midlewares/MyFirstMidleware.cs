@@ -1,42 +1,39 @@
-﻿using Scradot.Core;
+﻿using Scradot.Core.Abstract;
+using Scradot.Core.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Scradot.Test.Midlewares
 {
-    public class MyFirstMidleware : AbstractMidleware
+    public class MyFirstMidleware : IMidleware
     {
-        public override void StartSpider()
-        {
-            Console.WriteLine("Inicio spider pelo midleware");
-        }
-
-        public override void ErrorRequest(Request request, HttpResponseMessage httpResponseMessage)
+        public void StartSpider()
         {
             throw new NotImplementedException();
         }
 
-        public override void ReceivedResponse(Request request, Response response)
+        public void ErrorRequest(Request request, HttpResponseMessage httpResponseMessage)
         {
             throw new NotImplementedException();
         }
 
-        public override void SendItem(Response response, AbstractItem item)
+        public void ReceivedResponse(Request request, Response response)
         {
             throw new NotImplementedException();
         }
 
-        public override void SendRequest(Request request)
+        public void SendItem(Response response, AbstractItem item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SendRequest(Request request)
         {
             throw new NotImplementedException();
         }
 
         
-        public override void CloseSpider()
+        public void CloseSpider()
         {
             throw new NotImplementedException();
         }
