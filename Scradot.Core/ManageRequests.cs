@@ -1,28 +1,25 @@
 ﻿using Scradot.Core.Abstract;
 using Scradot.Core.Exceptions;
-using Scradot.Core.Midleware;
 using Scradot.Core.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Scradot.Core
 {
-    public class ManageSpider
+    public class ManageRequests : IManageRequests
     {
         public AbstractSpider SpiderAbstract { get; private set; }
         public SemaphoreSlim ConcurrencyRequests { get; private set; }
         public TimeSpan DownloadDelay { get; private set; }
         public int CountRetryRequests { get; private set; }
-        public ManageMidlewares Midlewares { get; private set; }
+        private readonly IManageMiddlewares _manageMiddlewares;
 
-        public ManageSpider(AbstractSpider spiderAbstract, ManageMidlewares midlewares = null)
+        public ManageRequests(AbstractSpider spiderAbstract, IManageMiddlewares midlewares)
         {
-            Midlewares = midlewares ?? new ManageMidlewares();
+            _manageMiddlewares = midlewares;
             SpiderAbstract = spiderAbstract;
 
             CountRetryRequests = spiderAbstract.SpiderConfig.RetryRequests;
@@ -30,14 +27,14 @@ namespace Scradot.Core
             DownloadDelay = spiderAbstract.SpiderConfig.DownloadDelay;
         }
 
-        public async Task StartSpider()
+        public async Task StartRequests()
         {
-            Midlewares.ExecuteStartSpider();
+            _manageMiddlewares.ExecuteStartSpider();
             foreach (var request in SpiderAbstract.BeginRequests())
             {
                 await HandleRequests(request, 1);
             }
-            Midlewares.ExecuteCloseSpider();
+            _manageMiddlewares.ExecuteCloseSpider();
         }
 
         private async Task HandleRequests(Request request, int depth)
@@ -49,19 +46,19 @@ namespace Scradot.Core
             var success = true;
             try
             {
-                Midlewares.ExecuteSendRequest(request);
+                _manageMiddlewares.ExecuteSendRequest(request);
                 response = await RetryRequests(request, depth);
             }
             catch(RequestException exception)
             {
                 success = false;
-                Midlewares.ExecuteErrorRequest(request, exception.ResponseMessge);
+                _manageMiddlewares.ExecuteErrorRequest(request, exception.ResponseMessge);
             }
             ConcurrencyRequests.Release();
 
             if (success)
             {
-                Midlewares.ExecuteReceivedResponse(request, response);
+                _manageMiddlewares.ExecuteReceivedResponse(request, response);
 
                 var taskList = new List<Task>();
                 foreach (var generator in request.Callback.Invoke(response))
@@ -69,13 +66,13 @@ namespace Scradot.Core
                     if (generator is Request)
                         taskList.Add(HandleRequests(generator as Request, depth + 1));
                     else
-                        Midlewares.ExecuteSendItem(response, generator);
+                        _manageMiddlewares.ExecuteSendItem(response, generator);
                 }
                 Task.WaitAll(taskList.ToArray());
             }
         }
 
-        public async Task<Response> RetryRequests(Request request, int depth)
+        private async Task<Response> RetryRequests(Request request, int depth)
         {
             HttpResponseMessage responseMessage = null;
             for (int index = 0; index < CountRetryRequests; index++)

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Scradot.Core.Abstract
 {
-    public interface IMidleware
+    public interface IMiddleware
     {
         public abstract void StartSpider();
         public abstract void SendRequest(Request request);

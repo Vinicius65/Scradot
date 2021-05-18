@@ -1,27 +1,25 @@
 ﻿using Scradot.Core;
-using Scradot.Core.Abstract;
 using Scradot.Core.Midleware;
 using Scradot.Test.Midlewares;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Test
+namespace Scradot.Test
 {
     class Program
     {
-        public static async Task Main()
+        public static void Main()
         {
-            var manager = new ManageSpider(
-                new QuotesSpider(),
-                new ManageMidlewares(
-                    new List<IMidleware>{
-                        new MyFirstMidleware() 
-                    }
-                )
-            );
-            await manager.StartSpider();
-            Console.WriteLine("Finish");
+            ManageSpiders.NewManage()
+                .AddScradotMiddlewares()
+
+                .AddMiddleware(new MyFirstMidleware())
+
+                .AddSpider(new QuotesSpider())
+                .AddSpider(new QuotesSpider())
+
+                .StartSpiders();
         }
     }
 }

@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 
-namespace Scradot.Extensions
+namespace Scradot.Core.Extensions
 {
     public static class ObjectExtensions
     {

@@ -1,12 +1,12 @@
 ﻿using Scradot.Core;
 using Scradot.Core.Abstract;
 using Scradot.Core.Models;
-using Scradot.Extensions;
+using Scradot.Core.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Test
+namespace Scradot.Test
 {
     public class QuotesSpider : AbstractSpider
     {
@@ -19,7 +19,7 @@ namespace Test
 
         public override  IEnumerable<object> Parse(Response response)
         {
-            Console.WriteLine(response.Url);
+            Console.WriteLine($"Guid: {GetHashCode()}: {response.Url}");
 
             var nextPage = response.Xpath("//li[@class='next']/a").GetAttr("href");
             if (nextPage != null)

@@ -1,4 +1,5 @@
 ﻿using Scradot.Core.Abstract;
+using Scradot.Core.Midleware;
 using Scradot.Core.Models;
 using System;
 using System.Net.Http;
@@ -6,11 +7,11 @@ using Test;
 
 namespace Scradot.Test.Midlewares
 {
-    public class MyFirstMidleware : IMidleware
+    public class MyFirstMidleware : IMiddleware
     {
         public void StartSpider()
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"Middleware {GetHashCode()}");
         }
 
         public void ErrorRequest(Request request, HttpResponseMessage httpResponseMessage)

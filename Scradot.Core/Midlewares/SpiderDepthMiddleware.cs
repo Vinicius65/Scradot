@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Scradot.Core.Midleware
 {
-    public class SpiderDepthMidleware : IMidleware
+    public class SpiderDepthMiddleware : IMiddleware
     {
         private bool _stop = false;
         public Dictionary<int, int> DepthRequests { get; private set; } = new() { { 1, 0} };

@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Scradot.Configuration
+namespace Scradot.Core.Configuration
 {
     public static class JsonConfig
     {

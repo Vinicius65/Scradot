@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Scradot.Core.Midleware
 {
-    class SpiderStatisticMidleware : IMidleware
+    class SpiderStatisticMiddleware : IMiddleware
     {
         private bool _stop = false;
         public int NumberOfRequests { get; private set; }

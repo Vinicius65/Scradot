@@ -1,4 +1,4 @@
-﻿using Scradot.Configuration;
+﻿using Scradot.Core.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace Scradot.Extensions
+namespace Scradot.Core.Extensions
 {
     public static class StringExtension
     {

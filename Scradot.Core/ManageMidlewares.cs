@@ -1,19 +1,18 @@
 ﻿using Scradot.Core.Abstract;
+using Scradot.Core.Midleware;
 using Scradot.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 
-namespace Scradot.Core.Midleware
+namespace Scradot.Core
 {
-    public class ManageMidlewares
+    public class ManageMidlewares : IManageMiddlewares
     {
-        public List<IMidleware> Midlewares { get; private set; }
-        public ManageMidlewares(List<IMidleware> midlewares = null)
+        public List<IMiddleware> Midlewares { get; private set; }
+        public ManageMidlewares(List<IMiddleware> midlewares = null)
         {
             Midlewares = midlewares ?? new();
-            Midlewares.Add(new SpiderStatisticMidleware());
-            Midlewares.Add(new SpiderDepthMidleware());
         }
 
         public void ExecuteStartSpider() => Midlewares.ForEach(midleware => Execute(() => midleware.StartSpider()));
@@ -30,6 +29,11 @@ namespace Scradot.Core.Midleware
                 action.Invoke();
             }
             catch {}
+        }
+
+        public void AddMiddleware(IMiddleware middleware)
+        {
+            Midlewares.Add(middleware);
         }
     }
 }

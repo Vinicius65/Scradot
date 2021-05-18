@@ -3,9 +3,9 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Text.Json.Serialization;
-using Scradot.Configuration;
+using Scradot.Core.Configuration;
 
-namespace Scradot.Extensions
+namespace Scradot.Core.Extensions
 {
     public static class SelectorExtension
     {
