@@ -10,11 +10,11 @@ namespace Scradot.Core.Abstract
 {
     public interface IMiddleware
     {
-        public abstract void StartSpider();
-        public abstract void SendRequest(Request request);
-        public abstract void ErrorRequest(Request request, HttpResponseMessage httpResponseMessage);
-        public abstract void ReceivedResponse(Request request, Response response);
-        public abstract void SendItem(Response response, object item);
-        public abstract void CloseSpider();
+        void StartSpider();
+        void SendRequest(Request request);
+        void ErrorRequest(Request request, HttpResponseMessage httpResponseMessage);
+        void ReceivedResponse(Request request, Response response);
+        void SendItem(Response response, object item);
+        void CloseSpider();
     }
 }
