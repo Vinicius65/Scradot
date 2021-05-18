@@ -17,7 +17,7 @@ namespace Scradot.Test
                 .AddMiddleware(new MyFirstMidleware())
 
                 .AddSpider(new QuotesSpider())
-                .AddSpider(new QuotesSpider())
+                .AddSpider(new QuotesSpiderTwo())
 
                 .StartSpiders();
         }

@@ -8,16 +8,16 @@ using System.Linq;
 
 namespace Scradot.Test
 {
-    public class QuotesSpider : AbstractSpider
+    public class QuotesSpiderTwo : AbstractSpider
     {
-        public QuotesSpider() : base(new SpiderConfig(TimeSpan.FromSeconds(1), 4, 3)) {}
+        public QuotesSpiderTwo() : base(new SpiderConfig(TimeSpan.FromSeconds(1), 4, 3)) { }
 
-        public override  IEnumerable<Request> BeginRequests()
+        public override IEnumerable<Request> BeginRequests()
         {
             yield return new Request(url: "http://quotes.toscrape.com", callback: Parse);
         }
 
-        public override  IEnumerable<object> Parse(Response response)
+        public override IEnumerable<object> Parse(Response response)
         {
 
             foreach (var nextPage in Enumerable.Range(2, 9))
@@ -30,7 +30,7 @@ namespace Scradot.Test
 
         public IEnumerable<object> ParseList(Response response)
         {
-            Console.WriteLine($"SPIDER ONE: {response.Url}");
+            Console.WriteLine($"SPIDER TWO: {response.Url}");
 
             foreach (var sel in response.Xpath("//div[@class='quote']").Select((div, index) => new { Div = div, Index = index }))
             {

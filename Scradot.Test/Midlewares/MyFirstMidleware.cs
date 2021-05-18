@@ -3,7 +3,6 @@ using Scradot.Core.Midleware;
 using Scradot.Core.Models;
 using System;
 using System.Net.Http;
-using Test;
 
 namespace Scradot.Test.Midlewares
 {
@@ -11,7 +10,7 @@ namespace Scradot.Test.Midlewares
     {
         public void StartSpider()
         {
-            Console.WriteLine($"Middleware {GetHashCode()}");
+            throw new NotImplementedException();
         }
 
         public void ErrorRequest(Request request, HttpResponseMessage httpResponseMessage)
