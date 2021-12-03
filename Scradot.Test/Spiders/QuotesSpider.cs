@@ -12,9 +12,9 @@ namespace Scradot.Test
     {
         public QuotesSpiderOne() : base(new SpiderConfig(TimeSpan.FromSeconds(1), 4, 3)) { }
 
-        public override IEnumerable<(Item, Request<Item>)> BeginRequests()
+        public override IEnumerable<Request<Item>> BeginRequests()
         {
-            yield return (null, new Request<Item>(url: "http://quotes.toscrape.com", callback: Parse));
+            yield return new Request<Item>(url: "http://quotes.toscrape.com", callback: Parse);
         }
 
         public override IEnumerable<(Item, Request<Item>)> Parse(Response response)
