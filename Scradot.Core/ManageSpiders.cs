@@ -6,51 +6,51 @@ using System.Threading.Tasks;
 
 namespace Scradot.Core
 {
-    public class ManageSpiders : IManageSpiders
+    public class ManageSpiders<TItem> : IManageSpiders<TItem>
     {
         public readonly List<IManageRequests> _manageRequestsList;
-        private readonly IManageMiddlewares _manageMiddlewares;
-        public ManageSpiders(IManageMiddlewares manageMiddlewares, IEnumerable<IManageRequests> manageRequestsList)
+        private readonly IManageMiddlewares<TItem> _manageMiddlewares;
+        public ManageSpiders(IManageMiddlewares<TItem> manageMiddlewares, IEnumerable<IManageRequests> manageRequestsList)
         {
             _manageMiddlewares = manageMiddlewares;
             _manageRequestsList = manageRequestsList.ToList();
         }
 
-        public static IManageSpiders NewManage() => new ManageSpiders(new ManageMidlewares(), new List<ManageRequests>());
+        public static IManageSpiders<TItem> NewManager() => new ManageSpiders<TItem>(new ManageMidlewares<TItem>(), new List<ManageRequests<TItem>>());
 
         public void StartSpiders()
         {
             var taskList = _manageRequestsList.Select(manageRequest => manageRequest.StartRequests());
             Task.WaitAll(taskList.ToArray());
         }
-        public IManageSpiders AddMiddleware(IMiddleware midleware)
+        public IManageSpiders<TItem> AddMiddleware(IMiddleware<TItem> midleware)
         {
             _manageMiddlewares.AddMiddleware(midleware);
             return this;
         }
 
-        public IManageSpiders AddSpider(AbstractSpider spider)
+        public IManageSpiders<TItem> AddSpider(AbstractSpider<TItem> spider)
         {
-            _manageRequestsList.Add(new ManageRequests(spider, _manageMiddlewares));
+            _manageRequestsList.Add(new ManageRequests<TItem>(spider, _manageMiddlewares));
             return this;
         }
 
-        public IManageSpiders AddDepthMiddleware()
+        public IManageSpiders<TItem> AddDepthMiddleware()
         {
-            _manageMiddlewares.AddMiddleware(new SpiderDepthMiddleware());
+            _manageMiddlewares.AddMiddleware(new SpiderDepthMiddleware<TItem>());
             return this;
         }
 
-        public IManageSpiders AddStatisticMiddleware()
+        public IManageSpiders<TItem> AddStatisticMiddleware()
         {
-            _manageMiddlewares.AddMiddleware(new SpiderStatisticMiddleware());
+            _manageMiddlewares.AddMiddleware(new SpiderStatisticMiddleware<TItem>());
             return this;
         }
 
-        public IManageSpiders AddScradotMiddlewares()
+        public IManageSpiders<TItem> AddScradotMiddlewares()
         {
-            _manageMiddlewares.AddMiddleware(new SpiderStatisticMiddleware());
-            _manageMiddlewares.AddMiddleware(new SpiderDepthMiddleware());
+            _manageMiddlewares.AddMiddleware(new SpiderStatisticMiddleware<TItem>());
+            _manageMiddlewares.AddMiddleware(new SpiderDepthMiddleware<TItem>());
             return this;
         }
     }

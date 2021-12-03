@@ -8,55 +8,55 @@ using System.Linq;
 
 namespace Scradot.Test
 {
-    public class QuotesSpider : AbstractSpider
+    public class QuotesSpiderOne : AbstractSpider<Item>
     {
-        public QuotesSpider() : base(new SpiderConfig(TimeSpan.FromSeconds(1), 4, 3)) {}
+        public QuotesSpiderOne() : base(new SpiderConfig(TimeSpan.FromSeconds(1), 4, 3)) { }
 
-        public override  IEnumerable<Request> BeginRequests()
+        public override IEnumerable<(Item, Request<Item>)> BeginRequests()
         {
-            yield return new Request(url: "http://quotes.toscrape.com", callback: Parse);
+            yield return (null, new Request<Item>(url: "http://quotes.toscrape.com", callback: Parse));
         }
 
-        public override  IEnumerable<object> Parse(Response response)
+        public override IEnumerable<(Item, Request<Item>)> Parse(Response response)
         {
 
             foreach (var nextPage in Enumerable.Range(2, 9))
             {
                 var nextUrlPage = $"http://quotes.toscrape.com/page/{nextPage}";
-                yield return new Request(url: nextUrlPage, ParseList);
+                yield return (null, new Request<Item>(url: nextUrlPage, ParseList));
             }
             ParseList(response);
         }
 
-        public IEnumerable<object> ParseList(Response response)
+        public IEnumerable<(Item, Request<Item>)> ParseList(Response response)
         {
-            Console.WriteLine($"SPIDER ONE: {response.Url}");
+            Console.WriteLine($"SPIDER TWO: {response.Url}");
 
             foreach (var sel in response.Xpath("//div[@class='quote']").Select((div, index) => new { Div = div, Index = index }))
             {
                 var baseUrl = "http://quotes.toscrape.com";
                 var partial = sel.Div.SelectSingleNode(".//a").GetAttr("href");
-                yield return new Request(url: baseUrl + partial, callback: ParseItem);
+                yield return (null, new Request<Item>(url: baseUrl + partial, callback: ParseItem));
             }
         }
 
-        public IEnumerable<object> ParseEnterPage(Response response)
+        public IEnumerable<(Item, Request<Item>)> ParseEnterPage(Response response)
         {
             foreach (var div in response.Xpath("//div[@class='quote']"))
             {
                 var baseUrl = "http://quotes.toscrape.com";
                 var partial = div.SelectSingleNode(".//a").GetAttr("href");
-                yield return new Request(url: baseUrl + partial, callback: ParseItem);
+                yield return (null, new Request<Item>(url: baseUrl + partial, callback: ParseItem));
             }
         }
 
-        public IEnumerable<object> ParseItem(Response response)
+        public IEnumerable<(Item, Request<Item>)> ParseItem(Response response)
         {
-            yield return new Item
+            yield return (new Item
             {
                 Autor = response.Url.Split("/").SkipLast(1).Last(),
                 Url = response.Url,
-            };
+            }, null);
         }
     }
 }

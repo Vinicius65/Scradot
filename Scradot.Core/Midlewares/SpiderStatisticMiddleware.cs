@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Scradot.Core.Midleware
 {
-    class SpiderStatisticMiddleware : IMiddleware
+    class SpiderStatisticMiddleware<TItem> : IMiddleware<TItem>
     {
         private bool _stop = false;
         public int NumberOfRequests { get; private set; }
@@ -22,10 +22,10 @@ namespace Scradot.Core.Midleware
             Console.WriteLine("Start Statistics Logging Midleware");
             Logging();
         }
-        public void SendRequest(Request request) => RequestsLastMinute++;
-        public void ErrorRequest(Request request, HttpResponseMessage httpResponseMessage) => NumberOfErrorRequests++;
-        public void ReceivedResponse(Request request, Response response) => ResponsesLastMinute++;
-        public void SendItem(Response response, object item) => ItemsLastMinute++;
+        public void SendRequest(Request<TItem> request) => RequestsLastMinute++;
+        public void ErrorRequest(Request<TItem> request, HttpResponseMessage httpResponseMessage) => NumberOfErrorRequests++;
+        public void ReceivedResponse(Request<TItem> request, Response response) => ResponsesLastMinute++;
+        public void SendItem(Response response, TItem item) => ItemsLastMinute++;
 
         public void CloseSpider()
         {

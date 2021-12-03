@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace Scradot.Core.Abstract
 {
-    public interface IMiddleware
+    public interface IMiddleware<TItem>
     {
         void StartSpider();
-        void SendRequest(Request request);
-        void ErrorRequest(Request request, HttpResponseMessage httpResponseMessage);
-        void ReceivedResponse(Request request, Response response);
-        void SendItem(Response response, object item);
+        void SendRequest(Request<TItem> request);
+        void ErrorRequest(Request<TItem> request, HttpResponseMessage httpResponseMessage);
+        void ReceivedResponse(Request<TItem> request, Response response);
+        void SendItem(Response response, TItem item);
         void CloseSpider();
     }
 }

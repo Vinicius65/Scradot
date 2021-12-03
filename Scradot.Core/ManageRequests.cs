@@ -9,15 +9,15 @@ using System.Threading.Tasks;
 
 namespace Scradot.Core
 {
-    public class ManageRequests : IManageRequests
+    public class ManageRequests<TItem> : IManageRequests
     {
-        public AbstractSpider SpiderAbstract { get; private set; }
+        public AbstractSpider<TItem> SpiderAbstract { get; private set; }
         public SemaphoreSlim ConcurrencyRequests { get; private set; }
         public TimeSpan DownloadDelay { get; private set; }
         public int CountRetryRequests { get; private set; }
-        private readonly IManageMiddlewares _manageMiddlewares;
+        private readonly IManageMiddlewares<TItem> _manageMiddlewares;
 
-        public ManageRequests(AbstractSpider spiderAbstract, IManageMiddlewares midlewares)
+        public ManageRequests(AbstractSpider<TItem> spiderAbstract, IManageMiddlewares<TItem> midlewares)
         {
             _manageMiddlewares = midlewares;
             SpiderAbstract = spiderAbstract;
@@ -30,14 +30,14 @@ namespace Scradot.Core
         public async Task StartRequests()
         {
             _manageMiddlewares.ExecuteStartSpider();
-            foreach (var request in SpiderAbstract.BeginRequests())
+            foreach (var (item, request) in SpiderAbstract.BeginRequests())
             {
-                await HandleRequests(request, 1);
+                await HandleRequests(item, request, 1);
             }
             _manageMiddlewares.ExecuteCloseSpider();
         }
 
-        private async Task HandleRequests(Request request, int depth)
+        private async Task HandleRequests(TItem item, Request<TItem> request, int depth)
         {
             await ConcurrencyRequests.WaitAsync();
             await Task.Delay(DownloadDelay);
@@ -61,18 +61,18 @@ namespace Scradot.Core
                 _manageMiddlewares.ExecuteReceivedResponse(request, response);
 
                 var taskList = new List<Task>();
-                foreach (var generator in request.Callback.Invoke(response))
+                foreach (var (newItem, newRequest) in request.Callback.Invoke(response))
                 {
-                    if (generator is Request)
-                        taskList.Add(HandleRequests(generator as Request, depth + 1));
-                    else
-                        _manageMiddlewares.ExecuteSendItem(response, generator);
+                    if (newRequest != null)
+                        taskList.Add(HandleRequests(item, newRequest, depth + 1));
+                    else if (newItem != null)
+                        _manageMiddlewares.ExecuteSendItem(response, newItem);
                 }
                 Task.WaitAll(taskList.ToArray());
             }
         }
 
-        private async Task<Response> RetryRequests(Request request, int depth)
+        private async Task<Response> RetryRequests(Request<TItem> request, int depth)
         {
             HttpResponseMessage responseMessage = null;
             for (int index = 0; index < CountRetryRequests; index++)

@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace Scradot.Core.Abstract
 {
-    public interface IManageMiddlewares
+    public interface IManageMiddlewares<TItem>
     {
         void ExecuteStartSpider();
-        void ExecuteSendRequest(Request request);
-        void ExecuteErrorRequest(Request request, HttpResponseMessage httpResponseMessage);
-        void ExecuteReceivedResponse(Request request, Response response);
-        void ExecuteSendItem(Response response, object item);
+        void ExecuteSendRequest(Request<TItem> request);
+        void ExecuteErrorRequest(Request<TItem> request, HttpResponseMessage httpResponseMessage);
+        void ExecuteReceivedResponse(Request<TItem> request, Response response);
+        void ExecuteSendItem(Response response, TItem item);
         void ExecuteCloseSpider();
-        void AddMiddleware(IMiddleware middleware);
+        void AddMiddleware(IMiddleware<TItem> middleware);
     }
 }

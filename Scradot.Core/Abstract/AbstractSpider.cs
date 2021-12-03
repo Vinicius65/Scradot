@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Scradot.Core.Abstract
 {
-    public abstract class AbstractSpider
+    public abstract class AbstractSpider<TItem>
     { 
         public SpiderConfig SpiderConfig { get; private set; }
         public AbstractSpider(SpiderConfig spiderConfig = null)
@@ -19,8 +19,8 @@ namespace Scradot.Core.Abstract
             );
         }
 
-        public abstract IEnumerable<Request> BeginRequests();
-        public abstract IEnumerable<object> Parse(Response response);
+        public abstract IEnumerable<(TItem, Request<TItem>)> BeginRequests();
+        public abstract IEnumerable<(TItem, Request<TItem>)> Parse(Response response);
 
     }
 }

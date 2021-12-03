@@ -11,14 +11,11 @@ namespace Scradot.Test
     {
         public static void Main()
         {
-            ManageSpiders.NewManage()
+            ManageSpiders<Item>.NewManager()
                 .AddScradotMiddlewares()
-
-                .AddMiddleware(new MyFirstMidleware())
-
-                .AddSpider(new QuotesSpider())
+                .AddMiddleware(new MyFirstMidleware<Item>())
+                .AddSpider(new QuotesSpiderOne())
                 .AddSpider(new QuotesSpiderTwo())
-
                 .StartSpiders();
         }
     }

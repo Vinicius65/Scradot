@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Scradot.Core.Midleware
 {
-    public class SpiderDepthMiddleware : IMiddleware
+    public class SpiderDepthMiddleware<TItem> : IMiddleware<TItem>
     {
         private bool _stop = false;
         public Dictionary<int, int> DepthRequests { get; private set; } = new() { { 1, 0} };
@@ -40,11 +40,11 @@ namespace Scradot.Core.Midleware
             Logging();
         }
 
-        public void SendRequest(Request request){}
+        public void SendRequest(Request<TItem> request){}
 
-        public void ErrorRequest(Request request, HttpResponseMessage httpResponseMessage){}
+        public void ErrorRequest(Request<TItem> request, HttpResponseMessage httpResponseMessage){}
 
-        public void ReceivedResponse(Request request, Response response)
+        public void ReceivedResponse(Request<TItem> request, Response response)
         {
             if (DepthRequests.TryGetValue(response.Meta.Depth, out _))
                 DepthRequests[response.Meta.Depth]++;
@@ -52,7 +52,7 @@ namespace Scradot.Core.Midleware
                 DepthRequests.Add(response.Meta.Depth, 1);
         }
 
-        public void SendItem(Response response, object item){ }
+        public void SendItem(Response response, TItem item){ }
 
         public void CloseSpider()
         {
