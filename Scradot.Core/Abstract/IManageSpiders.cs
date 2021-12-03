@@ -8,7 +8,7 @@ namespace Scradot.Core.Abstract
 {
     public interface IManageSpiders<TItem>
     {
-        void StartSpiders();
+        IAsyncEnumerable<TItem> StartSpiders();
         IManageSpiders<TItem> AddMiddleware(IMiddleware<TItem> middleware);
         IManageSpiders<TItem> AddSpider(AbstractSpider<TItem> abstractSpider);
         IManageSpiders<TItem> AddDepthMiddleware();

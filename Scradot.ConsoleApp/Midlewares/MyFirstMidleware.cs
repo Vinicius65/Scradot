@@ -4,7 +4,7 @@ using Scradot.Core.Models;
 using System;
 using System.Net.Http;
 
-namespace Scradot.Test.Midlewares
+namespace Scradot.ConsoleApp.Midlewares
 {
     public class MyFirstMidleware<TItem> : IMiddleware<TItem>
     {

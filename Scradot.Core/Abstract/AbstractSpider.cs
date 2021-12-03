@@ -19,7 +19,7 @@ namespace Scradot.Core.Abstract
             );
         }
 
-        public abstract IEnumerable<(TItem, Request<TItem>)> BeginRequests();
+        public abstract IEnumerable<Request<TItem>> BeginRequests();
         public abstract IEnumerable<(TItem, Request<TItem>)> Parse(Response response);
 
     }

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Scradot.Core.Abstract
 {
-    public interface IManageRequests
+    public interface IManageRequests<TItem>
     {
-        Task StartRequests();
+        IAsyncEnumerable<TItem> StartRequests();
     }
 }

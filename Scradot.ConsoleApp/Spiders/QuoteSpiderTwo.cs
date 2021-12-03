@@ -6,11 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Scradot.Test
+namespace Scradot.ConsoleApp.Spiders
 {
-    public class QuotesSpiderOne : AbstractSpider<Item>
+    public class QuotesSpiderTwo : AbstractSpider<Item>
     {
-        public QuotesSpiderOne() : base(new SpiderConfig(TimeSpan.FromSeconds(1), 4, 3)) { }
+        public QuotesSpiderTwo() : base(new SpiderConfig(TimeSpan.FromSeconds(1), 4, 3)) { }
 
         public override IEnumerable<Request<Item>> BeginRequests()
         {

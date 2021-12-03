@@ -8,9 +8,9 @@ namespace Scradot.Core
 {
     public class ManageSpiders<TItem> : IManageSpiders<TItem>
     {
-        public readonly List<IManageRequests> _manageRequestsList;
+        public readonly List<IManageRequests<TItem>> _manageRequestsList;
         private readonly IManageMiddlewares<TItem> _manageMiddlewares;
-        public ManageSpiders(IManageMiddlewares<TItem> manageMiddlewares, IEnumerable<IManageRequests> manageRequestsList)
+        public ManageSpiders(IManageMiddlewares<TItem> manageMiddlewares, IEnumerable<IManageRequests<TItem>> manageRequestsList)
         {
             _manageMiddlewares = manageMiddlewares;
             _manageRequestsList = manageRequestsList.ToList();
@@ -18,10 +18,15 @@ namespace Scradot.Core
 
         public static IManageSpiders<TItem> NewManager() => new ManageSpiders<TItem>(new ManageMidlewares<TItem>(), new List<ManageRequests<TItem>>());
 
-        public void StartSpiders()
+        public async IAsyncEnumerable<TItem> StartSpiders()
         {
-            var taskList = _manageRequestsList.Select(manageRequest => manageRequest.StartRequests());
-            Task.WaitAll(taskList.ToArray());
+            foreach (var spiders in _manageRequestsList.Select(manageRequest => manageRequest.StartRequests()))
+            {
+                await foreach (var item in spiders)
+                {
+                    yield return item;
+                }
+            }
         }
         public IManageSpiders<TItem> AddMiddleware(IMiddleware<TItem> midleware)
         {

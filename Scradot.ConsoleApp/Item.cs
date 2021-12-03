@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Scradot.Test
+namespace Scradot.ConsoleApp
 {
     public class Item
     {
@@ -17,7 +17,7 @@ namespace Scradot.Test
 
         public override string ToString()
         {
-            return JsonSerializer.Serialize(base.ToString());
+            return JsonSerializer.Serialize(this);
         }
     }
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Scradot.Core
 {
-    public class ManageRequests<TItem> : IManageRequests
+    public class ManageRequests<TItem> : IManageRequests<TItem>
     {
         public AbstractSpider<TItem> SpiderAbstract { get; private set; }
         public SemaphoreSlim ConcurrencyRequests { get; private set; }
@@ -27,17 +27,18 @@ namespace Scradot.Core
             DownloadDelay = spiderAbstract.SpiderConfig.DownloadDelay;
         }
 
-        public async Task StartRequests()
+        public async IAsyncEnumerable<TItem> StartRequests()
         {
             _manageMiddlewares.ExecuteStartSpider();
-            foreach (var (item, request) in SpiderAbstract.BeginRequests())
+            foreach (var request in SpiderAbstract.BeginRequests())
             {
-                await HandleRequests(item, request, 1);
+                await foreach (var i in HandleRequests(request, 1))
+                    yield return i;
             }
             _manageMiddlewares.ExecuteCloseSpider();
         }
 
-        private async Task HandleRequests(TItem item, Request<TItem> request, int depth)
+        private async IAsyncEnumerable<TItem> HandleRequests(Request<TItem> request, int depth)
         {
             await ConcurrencyRequests.WaitAsync();
             await Task.Delay(DownloadDelay);
@@ -60,15 +61,17 @@ namespace Scradot.Core
             {
                 _manageMiddlewares.ExecuteReceivedResponse(request, response);
 
-                var taskList = new List<Task>();
                 foreach (var (newItem, newRequest) in request.Callback.Invoke(response))
                 {
                     if (newRequest != null)
-                        taskList.Add(HandleRequests(item, newRequest, depth + 1));
+                        await foreach (var req in HandleRequests(newRequest, depth + 1))
+                            yield return req;
                     else if (newItem != null)
+                    {
                         _manageMiddlewares.ExecuteSendItem(response, newItem);
+                        yield return newItem;
+                    }
                 }
-                Task.WaitAll(taskList.ToArray());
             }
         }
 
@@ -97,5 +100,7 @@ namespace Scradot.Core
             }
             throw new RequestException($"Não foi possível fazer a requição para a url {request.Url} após {CountRetryRequests} tentativas.", responseMessage: responseMessage);
         }
+
+       
     }
 }
